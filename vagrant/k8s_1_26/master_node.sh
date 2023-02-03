@@ -32,16 +32,6 @@ mv linux-amd64/helm $bin_path/.
 rm -f helm-v3.11.0-linux-amd64.tar.gz
 rm -rf linux-amd64/
 
-# # install metrics-server:3.8.3 by helm
-# $bin_path/helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
-# $bin_path/helm repo update
-# $bin_path/helm install metrics-server metrics-server/metrics-server \
-#     --create-namespace \
-#     --namespace=kube-system \
-#     --set hostNetwork.enabled=true \
-#     --set args={--kubelet-insecure-tls} \
-#     --version 3.8.3
-
 # install bash-completion for kubectl 
 yum install bash-completion -y 
 

@@ -10,7 +10,7 @@ cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
 
 # raw_address for gitcontent
-raw_git="raw.githubusercontent.com/yellowsunn/IaC/master/yellowsunn/manifests"
+raw_git="raw.githubusercontent.com/yellowsunn/local-iac/master/manifest"
 bin_path="/usr/local/bin"
 
 # config for kubernetes's network 
@@ -19,7 +19,7 @@ kubectl apply -f https://$raw_git/172.16_net_calico_v3.25.0.yaml
 # config metallb for LoadBalancer service
 kubectl apply -f https://$raw_git/metallb-0.12.1.yaml
 
-# create configmap for metallb (192.168.2.11 - 60)
+# create configmap for metallb (192.168.29.11 - 192.168.29.111)
 kubectl apply -f https://$raw_git/metallb-l2config.yaml
 
 # create secret for metallb 
@@ -32,15 +32,15 @@ mv linux-amd64/helm $bin_path/.
 rm -f helm-v3.11.0-linux-amd64.tar.gz
 rm -rf linux-amd64/
 
-# install metrics-server:3.8.3 by helm
-$bin_path/helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
-$bin_path/helm repo update
-$bin_path/helm install metrics-server metrics-server/metrics-server \
-    --create-namespace \
-    --namespace=kube-system \
-    --set hostNetwork.enabled=true \
-    --set args={--kubelet-insecure-tls} \
-    --version 3.8.3
+# # install metrics-server:3.8.3 by helm
+# $bin_path/helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+# $bin_path/helm repo update
+# $bin_path/helm install metrics-server metrics-server/metrics-server \
+#     --create-namespace \
+#     --namespace=kube-system \
+#     --set hostNetwork.enabled=true \
+#     --set args={--kubelet-insecure-tls} \
+#     --version 3.8.3
 
 # install bash-completion for kubectl 
 yum install bash-completion -y 

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+raw_git="raw.githubusercontent.com/yellowsunn/local-iac/master/manifest"
 bin_path="/usr/local/bin"
 
 
@@ -9,5 +10,5 @@ $bin_path/helm repo update
 $bin_path/helm install metrics-server metrics-server/metrics-server \
     --create-namespace \
     --namespace=kube-system \
-    -f metric_server_override.yaml \
+    -f https://$raw_git/metric_server_override.yaml \
     --version 3.8.3

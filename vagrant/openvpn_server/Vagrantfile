@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  #================#
+  # OpenVpn Server #
+  #================#
+  config.vm.define "openvpn-server" do |cfg|
+    cfg.vm.box = "hashicorp/bionic64"
+    cfg.vm.box_version = "1.0.282"
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "openvpn-server"
+      vb.cpus = 1
+      vb.memory = 1024
+      vb.customize ["modifyvm", :id, "--groups", "/bastion-host"]
+    end
+    cfg.vm.host_name = "openvpn-server"
+    cfg.vm.network "private_network", ip: "192.168.30.10"
+    cfg.vm.network "forwarded_port", guest: 22, host: 60021, auto_correct: true, id: "ssh"
+    cfg.vm.network "forwarded_port", guest: 1194, host: 1194, auto_correct: true, protocol: "udp", id: "openvpn"
+    cfg.vm.synced_folder "../data", "/vagrant", disabled: true
+    cfg.vm.provision "shell", path: "openvpn_install.sh"
+  end
+end

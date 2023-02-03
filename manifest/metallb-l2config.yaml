@@ -9,4 +9,4 @@ data:
     - name: metallb-ip-range
       protocol: layer2
       addresses:
-      - 192.168.29.11-192.168.29.111
+      - 192.168.29.20-192.168.29.120

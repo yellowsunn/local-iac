@@ -8,7 +8,6 @@ Vagrant.configure("2") do |config|
   config.vm.define "nfs-server" do |cfg|
     cfg.vm.box = "hashicorp/bionic64"
     cfg.vm.box_version = "1.0.282"
-    cfg.disksize.size = "100GB"
     cfg.vm.provider "virtualbox" do |vb|
       vb.name = "nfs-server"
       vb.cpus = 1

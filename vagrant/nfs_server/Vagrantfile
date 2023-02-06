@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  #============#
+  # NFS Server #
+  #============#
+  config.vm.define "nfs-server" do |cfg|
+    cfg.vm.box = "hashicorp/bionic64"
+    cfg.vm.box_version = "1.0.282"
+    cfg.disksize.size = "100GB"
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "nfs-server"
+      vb.cpus = 1
+      vb.memory = 1024
+      vb.customize ["modifyvm", :id, "--groups", "/nfs"]
+    end
+    cfg.vm.host_name = "nfs-server"
+    cfg.vm.network "private_network", ip: "192.168.29.14"
+    cfg.vm.synced_folder "../data", "/vagrant", disabled: true
+  end
+end

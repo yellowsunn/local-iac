@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  #=========#
+  # jenkins #
+  #=========#
+  config.vm.define "jenkins-server" do |cfg|
+    cfg.vm.box = "hashicorp/bionic64"
+    cfg.vm.box_version = "1.0.282"
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "jenkins-server"
+      vb.cpus = 1
+      vb.memory = 1024
+      vb.customize ["modifyvm", :id, "--groups", "/infra"]
+    end
+    cfg.vm.host_name = "jenkins-server"
+    cfg.vm.network "private_network", ip: "192.168.29.16"
+    cfg.vm.synced_folder "../data", "/vagrant", disabled: true
+    cfg.vm.provision "shell", inline: "mkdir -p /docker/jenkins && chown -R 1000:1000 /docker/jenkins"
+    cfg.vm.provision "docker" do |d|
+      d.run "jenkins/jenkins:2.391-jdk17", args: "-p 80:8080 -v /docker/jenkins:/var/jenkins_home --restart=always"
+    end
+  end
+end

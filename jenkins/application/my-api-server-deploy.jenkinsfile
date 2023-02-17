@@ -1,0 +1,45 @@
+import java.text.SimpleDateFormat
+
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout git repository') {
+            steps {
+                git branch: 'main', credentialsId: '073c37ff-f218-4988-8490-8fbe46760674', url: 'https://github.com/yellowsunn/simple-webservice.git'
+            }
+        }
+        
+        stage('Run test') {
+            steps {
+                sh './gradlew :my-api-server:test'
+            }
+        }
+        
+        stage('Get current time') {
+            steps {
+                script {
+                    def dateFormat = new SimpleDateFormat("yyyyMMddhhmmss")
+                    def date = new Date()
+                    timestamp = dateFormat.format(date) 
+                    echo timestamp
+                }
+            }
+        }
+        
+        stage('Build and Deploy image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker_hub_credentials', passwordVariable: 'password', usernameVariable: 'username')]) {
+                        sh """
+                            ./gradlew :my-api-server:jib \
+                                -Djib.to.tags=$timestamp \
+                                -Djib.to.auth.username="$username" \
+                                -Djib.to.auth.password="$password"
+                        """
+                    }
+                }
+            }
+        }
+    }
+}

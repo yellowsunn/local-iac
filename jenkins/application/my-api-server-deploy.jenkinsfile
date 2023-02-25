@@ -4,7 +4,7 @@ pipeline {
     agent any
     
     stages {
-        stage('Checkout git repository') {
+        stage('Pull git repository') {
             steps {
                 git branch: 'main', credentialsId: '073c37ff-f218-4988-8490-8fbe46760674', url: 'https://github.com/yellowsunn/simple-webservice.git'
             }
@@ -39,6 +39,12 @@ pipeline {
                         """
                     }
                 }
+            }
+        }
+        
+        stage('Trigger change image tag') {
+            steps {
+                build job: 'change-image-tag', parameters: [string(name: 'tag', value: timestamp), string(name: 'imageName', value: 'yellowsunn/my-api-server'), string(name: 'baseDirectory', value: 'manifest/my-api-server')]
             }
         }
     }

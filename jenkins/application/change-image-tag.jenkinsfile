@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Pull git repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/yellowsunn/argocd-manifest'
+            }
+        }
+        
+        stage('Install kustomize') {
+            steps {
+                sh """
+                    if [ ! -f "${env.WORKSPACE}/kustomize" ]; then
+                        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+                    fi
+                    ${env.WORKSPACE}/kustomize version
+                """
+            }
+        }
+        
+        stage('Change imag tag') {
+            steps {
+                sh """
+                    cd $baseDirectory
+                    ${env.WORKSPACE}/kustomize edit set image $imageName:$tag
+                """
+            }
+        }
+        
+        stage('Push to manifest repo') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: '073c37ff-f218-4988-8490-8fbe46760674', passwordVariable: 'gitPassword', usernameVariable: 'gitUsername'), string(credentialsId: 'github_email', variable: 'gitEmail')]) {
+                    sh """
+                        git config user.email $gitEmail
+                        git config user.name $gitUsername
+                        git add -A
+                        git commit -m '[jenkins] update image tag = $imageName:$tag'
+                        git push https://${gitUsername}:${gitPassword}@github.com/yellowsunn/argocd-manifest.git
+                    """
+                }
+            }
+        }
+    }
+}

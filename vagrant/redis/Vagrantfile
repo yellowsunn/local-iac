@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  #===========#
+  # Redis 7.0 #
+  #===========#
+  config.vm.define "redis-server" do |cfg|
+    cfg.vm.box = "hashicorp/bionic64"
+    cfg.vm.box_version = "1.0.282"
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "redis-server"
+      vb.cpus = 1
+      vb.memory = 1024
+      vb.customize ["modifyvm", :id, "--groups", "/infra"]
+    end
+    cfg.vm.host_name = "redis-server"
+    cfg.vm.network "private_network", ip: "192.168.29.17"
+    cfg.vm.synced_folder "../data", "/vagrant", disabled: true
+    cfg.vm.provision "docker" do |d|
+      d.run "redis:7.0", args: "-p 6379:6379 -v /docker/redis/data:/data"
+    end
+  end
+end

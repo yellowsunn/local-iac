@@ -26,3 +26,15 @@ echo $1 > /tmp/zookeeper/myid
 # run zookper and kafka server
 bin/zookeeper-server-start.sh -daemon ./config/zookeeper.properties
 bin/kafka-server-start.sh -daemon ./config/server.properties
+
+# set systemctl
+wget https://raw.githubusercontent.com/yellowsunn/local-iac/main/vagrant/kafka/config/zookeeper-server.service
+wget https://raw.githubusercontent.com/yellowsunn/local-iac/main/vagrant/kafka/config/kafka-server.service
+mv zookeeper-server.service /usr/lib/systemd/system
+mv kafka-server.service /usr/lib/systemd/system
+
+systemctl daemon-reload
+systemctl restart zookeeper-server.service
+systemctl enable zookeeper-server.service
+systemctl restart kafka-server.service
+systemctl enable kafka-server.service

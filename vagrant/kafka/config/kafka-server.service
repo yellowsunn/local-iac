@@ -1,0 +1,18 @@
+// 내용
+[Unit]
+Description=kafka-server
+After=network.target
+
+[Service]
+Type=simple
+User=vagrant
+Group=vagrant
+SyslogIdentifier=kafka-server
+WorkingDirectory=/home/vagrant/kafka_2.13-3.3.1
+Restart=no
+RestartSec=0s
+ExecStart=/home/vagrant/kafka_2.13-3.3.1/bin/kafka-server-start.sh /home/vagrant/kafka_2.13-3.3.1/config/server.properties
+ExecStop=/home/vagrant/kafka_2.13-3.3.1/bin/kafka-server-stop.sh
+
+[Install]
+WantedBy=multi-user.target

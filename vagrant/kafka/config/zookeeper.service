@@ -6,7 +6,7 @@ After=network.target remote-fs.target
 
 [Service]
 Type=simple
-ExecStartPre=/bin/bash -c 'mkdir -p /tmp/zookeeper && [ ! -f '/tmp/zookeeper/myid' ] && cp /home/vagrant/myid /tmp/zookeeper/myid'
+ExecStartPre=+/bin/bash -c 'mkdir -p /tmp/zookeeper && [ ! -f '/tmp/zookeeper/myid' ] && cp /home/vagrant/myid /tmp/zookeeper/myid'
 ExecStart=/opt/kafka/bin/zookeeper-server-start.sh /opt/kafka/config/zookeeper.properties
 ExecStop=/opt/kafka/bin/zookeeper-server-stop.sh
 Restart=on-abnormal

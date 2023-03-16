@@ -20,23 +20,16 @@ mv config/server.properties config/server.properties.bak
 mv kafka-broker-$1.properties config/server.properties
 
 # set zookeeper id
+echo $1 > myid
 mkdir /tmp/zookeeper
-echo $1 > /tmp/zookeeper/myid
+cp myid /tmp/zookeeper/myid
 
 # run zookper and kafka server
 bin/zookeeper-server-start.sh -daemon ./config/zookeeper.properties
 bin/kafka-server-start.sh -daemon ./config/server.properties
 
-# set systemctl
-wget https://raw.githubusercontent.com/yellowsunn/local-iac/main/vagrant/kafka/config/zookeeper-server.service
-wget https://raw.githubusercontent.com/yellowsunn/local-iac/main/vagrant/kafka/config/kafka-server.service
-
-mkdir /usr/lib/systemd/system
-mv zookeeper-server.service /usr/lib/systemd/system/zookeeper-server.service
-mv kafka-server.service /usr/lib/systemd/system/system/kafka-server.service
-
-systemctl daemon-reload
-systemctl restart zookeeper-server.service
-systemctl enable zookeeper-server.service
-systemctl restart kafka-server.service
-systemctl enable kafka-server.service
+# reboot setting
+echo "sudo mkdir /tmp/zookeeper" >> /home/vagrant/.profile
+echo "sudo cp /home/vagrant/myid /tmp/zookeeper/myid" >> /home/vagrant/.profile
+echo "sudo /home/vagrant/kafka_2.13-3.3.1/bin/zookeeper-server-start.sh -daemon /home/vagrant/kafka_2.13-3.3.1/config/zookeeper.properties" >> /home/vagrant/.profile
+echo "sudo /home/vagrant/kafka_2.13-3.3.1/bin/kafka-server-start.sh -daemon /home/vagrant/kafka_2.13-3.3.1/config/server.properties" >> /home/vagrant/.profile

@@ -1,4 +1,4 @@
-N = 1
+N = 3
 
 Vagrant.configure("2") do |config|
   (1..N).each do |i|
@@ -12,8 +12,9 @@ Vagrant.configure("2") do |config|
         vb.customize ["modifyvm", :id, "--groups", "/infra"]
       end
       cfg.vm.host_name = "kafka-sever-#{i}"
-      cfg.vm.network "private_network", ip: "192.168.29.18"
+      cfg.vm.network "private_network", ip: "192.168.29.20#{i}"
       cfg.vm.synced_folder "../data", "/vagrant", disabled: true
+      cfg.vm.provision "shell", path: "kafka_install.sh", args: [ "#{i}00" ]
     end
   end
 end

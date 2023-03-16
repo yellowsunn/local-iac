@@ -30,8 +30,10 @@ bin/kafka-server-start.sh -daemon ./config/server.properties
 # set systemctl
 wget https://raw.githubusercontent.com/yellowsunn/local-iac/main/vagrant/kafka/config/zookeeper-server.service
 wget https://raw.githubusercontent.com/yellowsunn/local-iac/main/vagrant/kafka/config/kafka-server.service
-mv zookeeper-server.service /usr/lib/systemd/system
-mv kafka-server.service /usr/lib/systemd/system
+
+mkdir /usr/lib/systemd/system
+mv zookeeper-server.service /usr/lib/systemd/system/zookeeper-server.service
+mv kafka-server.service /usr/lib/systemd/system/system/kafka-server.service
 
 systemctl daemon-reload
 systemctl restart zookeeper-server.service

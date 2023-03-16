@@ -5,7 +5,8 @@ Requires=zookeeper.service
 
 [Service]
 Type=simple
-ExecStartPre=+/bin/bash -c 'mkdir -p /tmp/zookeeper && [ ! -f '/tmp/zookeeper/myid' ] && cp /home/vagrant/myid /tmp/zookeeper/myid'
+ExecStartPre=+/bin/mkdir -p /tmp/zookeeper
+ExecStartPre=+/bin/cp /home/vagrant/myid /tmp/zookeeper/myid
 ExecStart=/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties
 ExecStop=/opt/kafka/bin/kafka-server-stop.sh
 PrivateTmp=no

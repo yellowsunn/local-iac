@@ -10,6 +10,7 @@ ExecStartPre=+/bin/bash -c 'mkdir -p /tmp/zookeeper && [ ! -f '/tmp/zookeeper/my
 ExecStart=/opt/kafka/bin/zookeeper-server-start.sh /opt/kafka/config/zookeeper.properties
 ExecStop=/opt/kafka/bin/zookeeper-server-stop.sh
 Restart=on-abnormal
+PrivateTmp=no
 
 [Install]
 WantedBy=multi-user.target

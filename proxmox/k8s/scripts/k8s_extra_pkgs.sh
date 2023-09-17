@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # helm env add (move to parent vagrantfile)
-# PATH=$PATH:/usr/local/bin
+PATH=$PATH:/usr/local/bin
 
 # k8s-extra-pkgs addr 
 EXTRA_PKGS="https://raw.githubusercontent.com/sysnet4admin/IaC/master/k8s/extra-pkgs/v1.27.2"

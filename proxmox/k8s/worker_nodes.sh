@@ -11,8 +11,10 @@ docker_V = '24.0.2-1.el7'     # Docker
 m_node_ip = '192.168.0.151'
 ## /configuration variables ##
 
-sh ./scripts/k8s_env_build.sh $N $m_node_ip
-sh ./scripts/k8s_pkg_cfg.sh $k8s_V $docker_V $ctrd_V
+EXTERNAL_SCRIPTS = 'https://raw.githubusercontent.com/yellowsunn/local-iac/main/proxmox/k8s/scripts'
+
+sh $EXTERNAL_SCRIPTS/k8s_env_build.sh $N $m_node_ip
+sh $EXTERNAL_SCRIPTS/k8s_pkg_cfg.sh $k8s_V $docker_V $ctrd_V
 
 kubeadm join --token 123456.1234567890123456 \
              --discovery-token-unsafe-skip-ca-verification $m_node_ip:6443 \
